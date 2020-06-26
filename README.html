@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title></title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<p>##Assignment Instructions 1.Code for reading in the dataset and/or processing the data 2.Histogram of the total number of steps taken each day 3.Mean and median number of steps taken each day 4.Time series plot of the average number of steps taken 5.The 5-minute interval that, on average, contains the maximum number of steps 6.Code to describe and show a strategy for imputing missing data 7.Histogram of the total number of steps taken each day after missing values are imputed 8.Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends 9.All of the R code needed to reproduce the results (numbers, plots, etc.) in the report</p>
+
+<p>##Step 1 ##Code for reading in the dataset and/or processing the data</p>
+
+<p>setwd(&ldquo;C:/Users/hp/Desktop/R/Reproducible Research&rdquo;)
+activity&lt;-read.csv(&ldquo;activity.csv&rdquo;)
+Exploring the basics of this data</p>
+
+<p>dim(activity)
+names(activity)
+head(activity)
+str(activity)
+#total number of missing data
+sum(is.na(activity$steps))/dim(activity)[[1]]
+#transforming the date column into date format using lubridate
+library(lubridate)
+activity$date&lt;-ymd(activity$date)
+length(unique(activity$date))
+##Step 2 ##Histogram of the total number of steps taken each day</p>
+
+<p>library(ggplot2)
+Q2&lt;-data.frame(tapply(activity$steps,activity$date,sum,na.rm=TRUE))
+Q2$date&lt;-rownames(Q2)
+rownames(Q2)&lt;-NULL
+names(Q2)[[1]]&lt;-&ldquo;Total Steps&rdquo;
+png(&ldquo;plot1.png&rdquo;)
+#Total Steps by date bar chart
+ggplot(Q2,aes(y=Q2$<code>Total Steps</code>,x=Q2$date))+geom_bar(stat=&ldquo;identity&rdquo;) + ylab(&ldquo;Total Steps&rdquo;)+xlab(&ldquo;Date&rdquo;)+ggtitle(&ldquo;Total Steps by date&rdquo;)
+dev.off()
+ggplot(Q2,aes(y=Q2$<code>Total Steps</code>,x=Q2$date))+geom_bar(stat=&ldquo;identity&rdquo;) + ylab(&ldquo;Total Steps&rdquo;)+xlab(&ldquo;Date&rdquo;)+ggtitle(&ldquo;Total Steps by date&rdquo;)
+#Histogram of total steps
+qplot(Q2$<code>Total Steps</code>,geom=&ldquo;histogram&rdquo;,xlab=&ldquo;Total Steps&rdquo;,ylab=&ldquo;Counts&rdquo;,main=&ldquo;Total Steps Historgram&rdquo;)
+png(&ldquo;plot1.1.png&rdquo;)
+qplot(Q2$<code>Total Steps</code>,geom=&ldquo;histogram&rdquo;,xlab=&ldquo;Total Steps&rdquo;,ylab=&ldquo;Counts&rdquo;,main=&ldquo;Total Steps Historgram&rdquo;)
+dev.off()
+##Step 3 ##Mean and median number of steps taken each day</p>
+
+<p>library(dplyr)
+Q3&lt;-data.frame(round(tapply(activity$steps,activity$date,mean,na.rm=TRUE),2))
+Q3$date&lt;-rownames(Q3)
+rownames(Q3)&lt;-NULL
+names(Q3)[[1]]&lt;-&ldquo;Mean Steps&rdquo;
+temp&lt;-activity%&gt;%select(date,steps) %&gt;% group_by(date) %&gt;% summarise(median(steps))
+names(temp)[[2]]&lt;-&ldquo;Median Steps&rdquo;
+Q3$median&lt;-temp$<code>Median Steps</code>
+Q3&lt;-Q3 %&gt;% select(date,<code>Mean Steps</code>,median)
+##Step 4 ##Time series plot of the average number of steps taken</p>
+
+<p>Q4&lt;-Q3
+Q4$date&lt;-as.Date(Q4$date,format=&ldquo;%Y-%m-%d&rdquo;)
+ggplot(Q4,aes(x=Q4$date,y=Q4$<code>Mean Steps</code>))+geom_bar(stat=&ldquo;identity&rdquo;)+scale_x_date()+ylab(&ldquo;Mean Steps Every day&rdquo;)+xlab(&ldquo;Date&rdquo;)+ggtitle(&ldquo;Mean Steps by Date&rdquo;)
+png(&ldquo;plot4.png&rdquo;)
+ggplot(Q4,aes(x=Q4$date,y=Q4$<code>Mean Steps</code>))+geom_bar(stat=&ldquo;identity&rdquo;)+scale_x_date()+ylab(&ldquo;Mean Steps Every day&rdquo;)+xlab(&ldquo;Date&rdquo;)+ggtitle(&ldquo;Mean Steps by Date&rdquo;)
+dev.off()
+##Step 5 ##The 5-minute interval that, on average, contains the maximum number of steps</p>
+
+<p>#This is assuming that the words on average means averaging steps by date and interval
+activity$interval&lt;-factor(activity$interval)
+Q5&lt;-aggregate(data=activity,steps~date+interval,FUN=&ldquo;mean&rdquo;)
+Q5&lt;-aggregate(data=Q5,steps~interval,FUN=&ldquo;max&rdquo;)
+##Step 6 Code to describe and show a strategy for imputing missing data There are multiple strategies to deal with multiple value imputations. The common strategies include:</p>
+
+<p>Constant value imputations
+Regression model value imputations
+Mean/mode value substitutions For the purpose of simplicity, in this question, I will use the mean/mode value substitution strategy to impute missing values. That is, using the mean values to substitute out the missing values in the original data set Before doing any sort of imputation, it is helpful to understand what are the distributions of missing values by date and interval
+Q6&lt;-activity
+Q6$Missing&lt;-is.na(Q6$steps)
+Q6&lt;-aggregate(data=Q6,Missing~date+interval,FUN=&ldquo;sum&rdquo;)
+Q6.1&lt;-data.frame(tapply(Q6$Missing,Q6$date,sum))
+Q6.1$date&lt;-rownames(Q6.1)
+rownames(Q6.1)&lt;-NULL
+names(Q6.1)&lt;-c(&ldquo;Missing&rdquo;,&ldquo;date&rdquo;)
+Q6.1$date&lt;-as.Date(Q6.1$date,format=&ldquo;%Y-%m-%d&rdquo;)</p>
+
+<p>Q6.2&lt;-data.frame(tapply(Q6$Missing,Q6$interval,sum))
+Q6.2$date&lt;-rownames(Q6.2)
+rownames(Q6.2)&lt;-NULL
+names(Q6.2)&lt;-c(&ldquo;Missing&rdquo;,&ldquo;Interval&rdquo;)</p>
+
+<p>par(mfrow=c(1,2))
+plot(y=Q6.1$Missing,x=Q6.1$date,main=&ldquo;Missing Value Distribution by Date&rdquo;)
+plot(y=Q6.2$Missing,x=Q6.2$Interval,main=&ldquo;Missing Value Distribution by Interval&rdquo;)
+table(activity$date)
+By this point, from the plot, that the missing values have a very disctinct pattern. For every interval, there are consistantly 8 missing values. For the date, there are consistantly 288 missing values. And in total, there are 8 dates that have missing value. We don&#39;t exactly know the cause for these missing values but there&#39;s a pattern. For that matter, we can see that the mean value imputation is appropriate.</p>
+
+<p>We can see that every date has 288 data points. It means that the 8 dates have no data points at all what so ever. We can refine the analysis by looking at these missing values depending on their Weekday and interval parameters to matach with the average</p>
+
+<p>#Dates that have missing values 
+library(lubridate)
+Q6.3&lt;-as.data.frame(Q6.1) %&gt;% select(date,Missing) %&gt;% arrange(desc(Missing))
+Q6.3&lt;-Q6.3[which(Q6.3$Missing!=0),]
+Q6.3$Weekday&lt;-wday(Q6.3$date,label=TRUE)
+Q6.4&lt;-activity
+Q6.4$weekday&lt;-wday(Q6.4$date,label=TRUE)
+#Finding the mean of steps every monday, and every interval
+Q6.5&lt;-aggregate(data=Q6.4,steps~interval+weekday,FUN=&ldquo;mean&rdquo;,na.rm=TRUE)
+#Merge the pre-imputation table Q6.4 table with the average table Q6.5
+Q6.6&lt;-merge(x=Q6.4,y=Q6.5,by.x=c(&ldquo;interval&rdquo;,&ldquo;weekday&rdquo;),by.y=c(&ldquo;interval&rdquo;,&ldquo;weekday&rdquo;),all.x=TRUE)
+#Conditionally replacing the steps.x column NA value with the values from steps.y column value 
+Q6.6$Steps.Updated&lt;-0
+for (i in 1:dim(Q6.6)[[1]]){
+if(is.na(Q6.6[i,3])){Q6.6[i,6]=Q6.6[i,5]}
+else {Q6.6[i,6]=Q6.6[i,3]}
+}
+#Now simplify the imputed analytical data frame
+Q6.6 &lt;-Q6.6  %&gt;% select(date,weekday,interval,Steps.Updated)
+names(Q6.6)[[4]]&lt;-&ldquo;Steps&rdquo;</p>
+
+<p>Step 7
+Histogram of the total number of steps taken each day after missing values are imputed</p>
+
+<p>png(&ldquo;plot7.png&rdquo;)
+qplot(Q6.6$Steps,geom=&ldquo;histogram&rdquo;,main=&ldquo;Total steps taken histogram post imputation&rdquo;,xlab=&ldquo;Steps&rdquo;,ylab=&ldquo;Count&rdquo;)
+dev.off()
+qplot(Q6.6$Steps,geom=&ldquo;histogram&rdquo;,main=&ldquo;Total steps taken histogram post imputation&rdquo;,xlab=&ldquo;Steps&rdquo;,ylab=&ldquo;Count&rdquo;)</p>
+
+<p>Step 8
+Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends</p>
+
+<p>Q8&lt;-Q6.6
+levels(Q8$weekday)&lt;-c(1,2,3,4,5,6,7)
+Q8$WDWE&lt;-Q8$weekday %in% c(1,2,3,4,5)
+Q8.1&lt;-aggregate(data=Q8,Steps~interval+WDWE,mean,na.rm=TRUE)
+Q8.1$WDWE&lt;-as.factor(Q8.1$WDWE)
+levels(Q8.1$WDWE)&lt;-c(&ldquo;Weekend&rdquo;,&ldquo;Weekday&rdquo;)
+png(&ldquo;plot8.png&rdquo;)
+ggplot(data=Q8.1,aes(y=Steps,x=interval,group=1,color=WDWE))+geom_line() +scale_x_discrete(breaks = seq(0, 2500, by = 300))+ylab(&ldquo;Mean Steps&rdquo;)+xlab(&ldquo;Intervals&rdquo;)+ggtitle(&ldquo;Mean steps across intervals by Weekend and Weekday&rdquo;)
+dev.off()
+ggplot(data=Q8.1,aes(y=Steps,x=interval,group=1,color=WDWE))+geom_line() +scale_x_discrete(breaks = seq(0, 2500, by = 300))+ylab(&ldquo;Mean Steps&rdquo;)+xlab(&ldquo;Intervals&rdquo;)+ggtitle(&ldquo;Mean steps across intervals by Weekend and Weekday&rdquo;)</p>
+
+<p>#Producing the panel plot
+Q8.1$interval&lt;-as.numeric(as.character(Q8.1$interval))
+library(lattice)
+xyplot(data=Q8.1,Steps~interval|WDWE, grid = TRUE, type = c(&ldquo;p&rdquo;, &ldquo;smooth&rdquo;), lwd = 4,panel = panel.smoothScatter)
+library(hexbin)
+hexbinplot(data=Q8.1,Steps~interval|WDWE, aspect = 1, bins=50)
+png(&ldquo;plott8.1.png&rdquo;)
+xyplot(data=Q8.1,Steps~interval|WDWE, grid = TRUE, type = c(&ldquo;p&rdquo;, &ldquo;smooth&rdquo;), lwd = 4,panel = panel.smoothScatter)
+dev.off()</p>
+
+<p>png(&ldquo;plot8.2.png&rdquo;)
+hexbinplot(data=Q8.1,Steps~interval|WDWE, aspect = 1, bins=50)
+dev.off()</p>
+
+</body>
+
+</html>
